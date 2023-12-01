@@ -12,6 +12,6 @@ const QuestionSchema = new Schema({
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Like" }],
 });
 
-const QuestionModel = mongoose.model("Question", QuestionSchema);
+const Question = mongoose.model("Question", QuestionSchema);
 
-export default QuestionModel;
+export default Question;

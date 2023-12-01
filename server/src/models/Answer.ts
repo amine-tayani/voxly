@@ -13,6 +13,6 @@ const AnswerSchema = new Schema({
   },
 });
 
-const AnswerModel = mongoose.model("Answer", AnswerSchema);
+const Answer = mongoose.model("Answer", AnswerSchema);
 
-export default AnswerModel;
+export default Answer;
