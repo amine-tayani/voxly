@@ -115,6 +115,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
   const resToken = await createdToken.save();
 
   sendResetPasswordEmail(user.email, resToken.token);
+
+  res.status(201).json({
+    message: "check your mail to reset your password.",
+  });
 };
 
 export const resetPassword = async (req: Request, res: Response) => {};
