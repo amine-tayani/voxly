@@ -10,6 +10,6 @@ const UserSchema = new Schema({
   likedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
 });
 
-const UserModel = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
-export default UserModel;
+export default User;
