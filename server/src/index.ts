@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import config from "./config/config";
 import userRoutes from "./routes/users";
+import authRoutes from "./routes/auth";
 
 const PORT = config.port || 5000;
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 mongoose
   .connect(url)

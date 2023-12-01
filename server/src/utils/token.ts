@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 
 export const generateToken = (id: Types.ObjectId) => {
   const generatedToken = jwt.sign({ id }, config.jwt.secret!, {
-    expiresIn: config.jwt.accessExpirationMinutes,
+    expiresIn: "30d",
   });
   return generatedToken;
 };
