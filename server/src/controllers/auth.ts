@@ -18,7 +18,7 @@ export const createAccount = async (req: Request, res: Response) => {
     const existingEmail = await User.findOne({ email: email });
 
     if (existingEmail) {
-      return res.status(400).json({ msg: "*This email already exists." });
+      return res.status(400).json({ message: "*This email already exists." });
     }
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
@@ -55,10 +55,14 @@ export const loginIntoAccount = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email });
     if (!user)
-      return res.status(400).json({ msg: "No such account has been found." });
+      return res
+        .status(400)
+        .json({ message: "No such account has been found." });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ msg: "Email or password is incorrect." });
+      return res
+        .status(400)
+        .json({ message: "Email or password is incorrect." });
     const token = generateToken(user._id);
     res.status(201).json({
       token,
@@ -100,7 +104,9 @@ export const forgotPassword = async (req: Request, res: Response) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user) throw new Error("Email does not exist");
+  if (!user) {
+    return res.status(400).json({ message: "Account does not exist." });
+  }
 
   let randomChars = crypto.randomBytes(32).toString("hex");
   const salt = await bcrypt.genSalt();

@@ -4,19 +4,19 @@ import User from "../models/User";
 const router = express.Router();
 
 export const getCurrentUser = async (req: Request, res: Response) => {
-  // @ts-ignore
-  if (!req.user) {
-    return res.status(401).json({ message: "Invalid token" });
-  } else {
+  try {
     // @ts-ignore
-    const user = await User.findOne(req.id);
-    if (!user) return res.status(401).json({ message: "User does not exist" });
+    const user = await User.findById(req.body.user.id);
+
+    if (!user) {
+      return res.status(400).json({ message: "You are not logged in" });
+    }
     res.status(201).json({
-      user: {
-        id: user._id,
-        email: user.email,
-      },
+      id: user._id,
+      email: user.email,
     });
+  } catch (e) {
+    res.status(400).json({ message: "An error Occured" });
   }
 };
 
