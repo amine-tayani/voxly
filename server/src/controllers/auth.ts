@@ -1,12 +1,10 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
 import User from "../models/User";
 import config from "../config/config";
 import { generateToken, verifyToken } from "../utils/token";
-import Token from "../models/Token";
-import { sendResetPasswordEmail } from "../utils/email";
+import { requestPasswordReset, resetPassword } from "../services/auth-service";
 
 const router = express.Router();
 
@@ -101,33 +99,18 @@ export const checkIftokenIsValid = async (req: Request, res: Response) => {
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(400).json({ message: "Account does not exist." });
-  }
-
-  let randomChars = crypto.randomBytes(32).toString("hex");
-  const salt = await bcrypt.genSalt();
-  const hash = await bcrypt.hash(randomChars, Number(salt));
-
-  const createdToken = new Token({
-    userId: user._id,
-    token: hash,
-    createdAt: Date.now(),
-  });
-
-  const resToken = await createdToken.save();
-
-  sendResetPasswordEmail(user.email, resToken.token);
-
-  res.status(201).json({
-    message: "check your mail to reset your password.",
-  });
+  const response = await requestPasswordReset(req.body.email);
+  return res.json(response);
 };
 
-export const resetPassword = async (req: Request, res: Response) => {};
+export const passwordReset = async (req: Request, res: Response) => {
+  const response = await resetPassword(
+    req.body.id,
+    req.body.token,
+    req.body.password
+  );
+  return res.json(response);
+};
 
 export const logout = async (req: Request, res: Response) => {};
 

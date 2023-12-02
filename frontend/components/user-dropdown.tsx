@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import {
@@ -9,11 +10,28 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { useAuth } from '~/lib/auth';
+import { deleteCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 
 export function UserNav() {
+  const [email, setEmail] = useState('');
+  const router = useRouter();
+  const fetchCurrentUser = async () => {
+    const { email } = await useAuth();
+    setEmail(email);
+  };
+  useEffect(() => {
+    fetchCurrentUser();
+  });
+
+  const logout = useCallback(() => {
+    deleteCookie('auth-token');
+    router.push('/login');
+  }, []);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,9 +48,9 @@ export function UserNav() {
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>amine</p>
+            <p className='text-sm font-medium leading-none'>{email}</p>
             <p className='text-xs leading-none text-muted-foreground'>
-              amine@gmail.com
+              {email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -43,7 +61,9 @@ export function UserNav() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem>
+          <button onClick={logout}>Log out</button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

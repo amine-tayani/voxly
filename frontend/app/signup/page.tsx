@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { Metadata } from 'next';
-import { UserSignupForm } from '~/components/user-signup-form';
+import { CreateAccountForm } from '~/components/auth/signup/form';
 
 export const metadata: Metadata = {
   title: 'Voxly - Sign up',
@@ -21,16 +20,7 @@ export default function SignupPage() {
                 Enter your email below to create your account
               </p>
             </div>
-            <UserSignupForm />
-            <p className='px-8 text-center text-sm text-muted-foreground'>
-              Already have an account{' '}
-              <Link
-                href='/login'
-                className='underline underline-offset-4 hover:text-primary'
-              >
-                Login
-              </Link>
-            </p>
+            <CreateAccountForm />
           </div>
         </div>
       </div>
