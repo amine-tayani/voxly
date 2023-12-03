@@ -10,15 +10,14 @@ const getAll = async () => {
   return questions;
 };
 
-const getNearBy = async (longitude: string, latitude: string) => {
+const getNearBy = async (longitude: number, latitude: number) => {
   const questions = await Question.find({
     location: {
       $near: {
         $geometry: {
           type: "Point",
-          coordinates: [parseFloat(longitude), parseFloat(latitude)],
+          coordinates: [longitude, latitude],
         },
-        $maxDistance: 5000,
       },
     },
   });

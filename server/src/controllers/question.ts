@@ -7,7 +7,7 @@ const router = express.Router();
 export const askQuestion = async (req: Request, res: Response) => {
   try {
     const { title, content, location } = req.body;
-    const userId = req.body.user.id;
+    const userId = req.body.id;
 
     const newQuestion = new Question({
       title,
@@ -24,13 +24,16 @@ export const askQuestion = async (req: Request, res: Response) => {
     res.json({ savedQuestion });
   } catch (error) {
     console.error("Error adding question:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Error while posting a question" });
   }
 };
 
 export const getNearbyQuestions = async (req: Request, res: Response) => {
-  const { longitude, latitude } = req.params;
+  const latitude = req.query.latitude;
+  const longitude = req.query.latitude;
+
   try {
+    // @ts-ignore
     const questions = await QuestionService.getNearBy(longitude, latitude);
 
     return res.status(201).json({

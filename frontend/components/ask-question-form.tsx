@@ -3,6 +3,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useGeolocated } from 'react-geolocated';
+import { useRouter } from 'next/navigation';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Textarea } from './ui/textarea';
 import { toast } from './ui/use-toast';
@@ -18,6 +20,10 @@ export function AskQuestionForm({
   const askFormSchema = z.object({
     title: z.string().max(80).min(6),
     content: z.string().max(160).min(20),
+    location: z.object({
+      longitude: z.number(),
+      latitude: z.number(),
+    }),
   });
 
   type AskFormSchema = z.infer<typeof askFormSchema>;
@@ -25,9 +31,18 @@ export function AskQuestionForm({
   const defaultValues: Partial<AskFormSchema> = {
     title: '',
     content: '',
+    location: { longitude: 0, latitude: 0 },
   };
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const { coords } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+  });
 
   const form = useForm<AskFormSchema>({
     resolver: zodResolver(askFormSchema),
@@ -41,7 +56,14 @@ export function AskQuestionForm({
       const response = await fetch('http://localhost:4000/api/questions/post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          title: data.title,
+          content: data.content,
+          location: {
+            longitude: coords?.longitude,
+            latitude: coords?.latitude,
+          },
+        }),
       });
 
       const fetchedData = await response.json();
@@ -54,12 +76,12 @@ export function AskQuestionForm({
         return;
       } else {
         toast({
-          description: 'You successfully Logged in',
+          description: 'You successfully posted a question',
         });
-        setLoading(false);
+        window.location.reload();
       }
     } catch (err) {
-      console.log(err);
+      setLoading(false);
     }
   }
   return (

@@ -4,12 +4,11 @@ import {
   getNearbyQuestions,
   likeQuestion,
 } from "../controllers/question";
-import authMiddleware from "../middlewares/auth";
 
 const router: Router = express.Router();
 
-router.post("/post", authMiddleware, askQuestion);
-router.post("/:questionId/like", authMiddleware, likeQuestion);
-router.get("/nearby", authMiddleware, getNearbyQuestions);
+router.post("/post", askQuestion);
+router.post("/:questionId/like", likeQuestion);
+router.get("/nearby", getNearbyQuestions);
 
 export default router;

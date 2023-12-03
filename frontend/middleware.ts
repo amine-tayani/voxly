@@ -5,6 +5,10 @@ export async function middleware(req: NextRequest) {
 
   token = req.cookies.get('auth-token')?.value;
 
+  // const requestHeaders = new Headers(req.headers);
+
+  // requestHeaders.set('x-auth-token', `${token}`);
+
   if (req.nextUrl.pathname.startsWith('/feed') && !token)
     return NextResponse.redirect(new URL('/login', req.url));
 
