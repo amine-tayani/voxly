@@ -13,8 +13,9 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { useAuth } from '~/lib/auth';
-import { deleteCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export function UserNav() {
   const [email, setEmail] = useState('');
@@ -25,11 +26,12 @@ export function UserNav() {
   };
   useEffect(() => {
     fetchCurrentUser();
-  });
+  }, [email]);
 
   const logout = useCallback(() => {
-    deleteCookie('auth-token');
+    setCookie('auth-token', '');
     router.push('/login');
+    router.refresh();
   }, []);
 
   return (
@@ -46,15 +48,17 @@ export function UserNav() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
-        <DropdownMenuLabel className='font-normal'>
-          <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>{email}</p>
-            <p className='text-xs leading-none text-muted-foreground'>
-              {email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        {email && (
+          <>
+            <DropdownMenuLabel className='font-normal'>
+              <div className='flex flex-col space-y-1'>
+                <p className='text-sm font-medium leading-none'>{email}</p>
+                <p className='text-xs leading-none text-neutral-700'>{email}</p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>
 
@@ -62,7 +66,11 @@ export function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <button onClick={logout}>Log out</button>
+          {email ? (
+            <button onClick={logout}>Log out</button>
+          ) : (
+            <Link href='/login'>Login</Link>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

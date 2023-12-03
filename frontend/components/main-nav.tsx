@@ -16,16 +16,16 @@ export function MainNav({
         href='/home'
         className='text-sm font-medium transition-colors hover:text-primary'
       >
-        Home
+        <h1 className='text-xl font-semibold'>Voxly</h1>
       </Link>
       <Link
-        href='/questions'
+        href='/favourites'
         className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
       >
-        Questions
+        Favourites
       </Link>
       <Link
-        href='/questions'
+        href='/login'
         className='text-sm font-medium text-muted-foreground transition-colors hover:text-primary'
       >
         Login

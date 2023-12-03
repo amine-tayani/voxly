@@ -69,6 +69,7 @@ export function LoginAccountForm({ className, ...props }: UserAuthFormProps) {
         });
         setLoading(false);
         router.push('/feed');
+        router.refresh();
       }
     } catch (err) {
       console.log(err);

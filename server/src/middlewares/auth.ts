@@ -6,7 +6,10 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header("x-auth-token");
 
-    if (!token) return res.status(403).send("Access denied.");
+    if (!token)
+      return res.status(403).json({
+        message: "You need to Log in First",
+      });
 
     const decoded = jwt.verify(token, config.jwt.secret!);
     req.body.user = decoded;

@@ -3,6 +3,6 @@ import Answer from "../models/Answer";
 
 const router = express.Router();
 
-export const createAnswer = async (req: Request, res: Response) => {};
+export const GiveAnswer = async (req: Request, res: Response) => {};
 
 export default router;

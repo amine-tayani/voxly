@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
   answers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Answer" }],
-  likedQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
+  favouriteQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
 });
 
 const User = mongoose.model("User", UserSchema);
